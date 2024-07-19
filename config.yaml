@@ -1,0 +1,20 @@
+Server:
+  Port: "8085"
+  IP: "127.0.0.1"
+
+Paths:
+  Static: "./static"
+  Templates: "./templates"
+  Media: "./media"
+
+Contact:
+  Name: "Sophie Kisiel"
+  Email: "sophie@sksiel.com"
+  Links:
+    - Name: "GitHub"
+      URL: "https://github.com/Sophuwu300"
+
+Website:
+  Title: "Sophie Kisiel"
+  Description: "Sophie Kisiel's personal website and blog."
+  Url: "https://skisiel.com"
