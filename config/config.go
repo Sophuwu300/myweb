@@ -34,7 +34,6 @@ type Link struct {
 type ContactInfo struct {
 	Email string `yaml:"Email"`
 	Name  string `yaml:"Name"`
-	Links []Link `yaml:"Links"`
 }
 
 // WebInfo is a struct that holds the configuration for the website information
@@ -42,6 +41,7 @@ type WebInfo struct {
 	Title       string `yaml:"Title"`
 	Description string `yaml:"Description"`
 	Url         string `yaml:"Url"`
+	Extras      []Link `yaml:"ExternalLinks"`
 }
 
 // Config is a struct that holds the configuration for the server, directories, and contact information
