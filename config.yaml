@@ -4,7 +4,7 @@ Server:
   Url: "https://skisiel.com"
 
 Paths:
-  Static: "./static"
+  Static: "../githttp/static"
   Templates: "./templates"
   Media: "./media"
 

@@ -1,9 +1,14 @@
 {{ define "header" }}
 <header>
-    <h1>Sophie Kisiel</h1>
-    <a href="/"><button>Home</button></a>
-    <a href="/blog/"><button>Blog</button></a>
-    <a href="//sophuwu.site/"><button>Git</button></a>
-    <a href="/animations/"><button>Animations</button></a>
+    <div>
+        <a class="favicon" href="/">&nbsp;</a>
+        <h2 style="font-size: 2cap;">Sophie Kisiel</h2>
+        <a href="/" style="margin-left: auto;"><button class="headbutt"><label class="fa fa-home"></label> Home</button></a>
+        <a href="/blog/"><button class="headbutt"><label class="fa fa-book"></label> Blog</button></a>
+        <a href="//sophuwu.site/"><button class="headbutt"><label class="fa fa-code-fork"></label> Git Repo</button></a>
+        <a href="/animations/"><button class="headbutt"><label class="fa fa-image"></label> Animations</button></a>
+    </div>
+
+    <hr style="margin-top: 5px;">
 </header>
 {{ end }}
