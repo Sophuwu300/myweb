@@ -1,0 +1,24 @@
+{{ define "blogs" }}
+<html lang="en">
+{{ template "head" . }}
+<body>
+{{ template "header" . }}
+<main>
+    <h1>Blogs</h1>
+    <p>
+        {{ len .Blogs }} blogs found.
+    </p>
+    <hr>
+    {{ range .Blogs }}
+    <section>
+        <a href="/blog/{{ .Name }}" class="index-name">{{ .Name }}</a>
+        <span style="margin: 0 10px;">{{ .Date }}</span>
+        <br>
+        <span style="text-align: justify; width: 100% !important;" class="desc">{{ .Desc }}</span>
+        <hr>
+    </section>
+    {{ end }}
+</main>
+</body>
+</html>
+{{ end }}

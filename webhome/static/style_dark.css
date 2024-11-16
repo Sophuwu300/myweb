@@ -1,0 +1,114 @@
+html, body {
+    background-color: #262833;
+}
+*{
+    color: white;
+}
+a {
+    color: #5da5ff;
+}
+a:hover {
+    color: #40d8ff;
+}
+button:hover {
+    color: #fff;
+    background-color: #131419;
+    box-shadow: rgba(0, 0, 0, 0.5) 8px 8px 15px;
+}
+button:active {
+    box-shadow: none;
+}
+
+button {
+    background-color: rgba(0, 0, 0, 0.25);
+    border: 3px solid transparent;
+    color: #ffffff;
+}
+p, li {
+    color: #dddddd;
+}
+hr {
+    border-color: #444444;
+}
+::-webkit-scrollbar-track {
+    background: #353545;
+}
+::-webkit-scrollbar-thumb {
+    background: #555566;
+    border: 3px solid #353545;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #888899;
+}
+.project-meta {
+    color: #aaaaaa;
+}
+.filebutton {
+    background-color: #111111;
+    border: 2px solid #aaaaaa;
+}
+.fullbutton:hover, .filebutton:hover, .showbutton:hover {
+    color: #fff;
+    background-color: #111111;
+}
+.filebutton {
+    background-color: #111111;
+}
+.codeblock, .codestuff {
+    border: 1px solid #777777;
+}
+.terminal {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid #ffffff37;
+}
+.hljs, .codeblock {
+  background: #0b0a33;
+}
+
+.hljs-built_in,
+.hljs-selector-tag,
+.hljs-section,
+.hljs-link {
+  color: #00d0ff;
+}
+
+.hljs-keyword {
+  color: #ff0090;
+}
+
+.hljs,
+.hljs-subst {
+  color: #ffffff;
+}
+
+.hljs-title,
+.hljs-attr,
+.hljs-meta-keyword {
+  color: #50f4fa;
+}
+
+.hljs-string {
+  color: lightgreen;
+}
+.hljs-meta,
+.hljs-name,
+.hljs-type,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-tag,
+.hljs-template-variable {
+  color: #f1fa8c;
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion {
+  color: #6272a4;
+}
+
+.hljs-literal,
+.hljs-number {
+  color: #aa70fc;
+}

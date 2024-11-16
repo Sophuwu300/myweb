@@ -1,0 +1,116 @@
+html, body {
+    background-color: #f0f0f0
+}
+*{
+    color: #1a1a1a;
+}
+a {
+    color: #0055cc;
+}
+a:hover {
+    color: #004499;
+}
+button:hover {
+    color: #333;
+    background-color: rgba(0, 0, 0, 0.09);
+    box-shadow: rgba(0, 0, 0, 0.5) 8px 8px 15px;
+}
+button:active {
+    box-shadow: none;
+}
+
+button {
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 3px solid transparent;
+    color: #1a1a1a;
+}
+p, li {
+    color: #1a1a1a;
+}
+hr {
+    border-color: #cccccc;
+}
+::-webkit-scrollbar-track {
+    background: #cccccc;
+}
+::-webkit-scrollbar-thumb {
+    background: #eeeeee;
+    border: 3px solid #cccccc;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #dddddd;
+}
+.project-meta {
+    color: #333;
+}
+.filebutton {
+    background-color: #111111;
+    border: 2px solid #aaaaaa;
+}
+.fullbutton:hover, .filebutton:hover, .showbutton:hover {
+    color: #fff;
+    background-color: #111111;
+}
+.filebutton {
+    background-color: #111111;
+}
+.codeblock, .codestuff {
+    border: 1px solid #777777;
+}
+.terminal {
+    background-color: rgba(0, 0, 0, 0.75);
+    border: 1px solid #000000;
+    color: white;
+}
+
+.hljs, .codeblock {
+  background: #f6f6f6;
+}
+
+.hljs-built_in,
+.hljs-selector-tag,
+.hljs-section,
+.hljs-link {
+  color: #3a8dff;  /* Adjusted for contrast */
+}
+
+.hljs-keyword {
+  color: #ff00c2;  /* Adjusted for contrast */
+}
+
+.hljs,
+.hljs-subst {
+  color: #000000;  /* Changed to black for contrast */
+}
+
+.hljs-title,
+.hljs-attr,
+.hljs-meta-keyword {
+  color: #00bdff;  /* Adjusted for contrast */
+}
+
+.hljs-string {
+  color: #00a100;  /* Darker shade of green for contrast */
+}
+.hljs-meta,
+.hljs-name,
+.hljs-type,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-tag,
+.hljs-template-variable {
+  color: #b7b700;  /* Darker shade for contrast */
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion {
+  color: #6c6c6c;  /* Adjusted for better visibility */
+}
+
+.hljs-literal,
+.hljs-number {
+  color: #ff006a;  /* Darker purple for better contrast */
+}
