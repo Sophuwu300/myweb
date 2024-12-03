@@ -54,7 +54,7 @@ func init() {
 	} else {
 		WebRoot = filepath.Join(filepath.Dir(os.Args[1]), mm["webroot"])
 	}
-	DbPath = path("stuff.sqlite")
+	DbPath = path("data.db")
 	StaticPath = path("static")
 	MediaPath = path("media")
 	Templates = path("templates/*")

@@ -1,3 +1,4 @@
 build/
 webhome/*.sqlite
+webhome/*.db
 webhome/media/*
