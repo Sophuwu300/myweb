@@ -1,9 +1,13 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
 	"sophuwu.site/myweb/config"
 )
 
@@ -38,6 +42,17 @@ func main() {
 	HttpFS("/static/", config.StaticPath)
 	HttpFS("/media/", config.MediaPath)
 
-	http.ListenAndServe(config.ListenAddr, nil)
-
+	server := http.Server{Addr: config.ListenAddr, Handler: nil}
+	go func() {
+		err := server.ListenAndServe()
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("Error starting server: %v", err)
+		}
+	}()
+	sigchan := make(chan os.Signal)
+	signal.Notify(sigchan)
+	s := <-sigchan
+	println("stopping: got signal", s.String())
+	server.Shutdown(context.Background())
+	println("stopped")
 }

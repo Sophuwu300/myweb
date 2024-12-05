@@ -10,7 +10,6 @@ import (
 var (
 	ListenAddr string
 	WebRoot    string
-	DbPath     string
 	StaticPath string
 	MediaPath  string
 	Templates  string
@@ -54,7 +53,6 @@ func init() {
 	} else {
 		WebRoot = filepath.Join(filepath.Dir(os.Args[1]), mm["webroot"])
 	}
-	DbPath = path("data.db")
 	StaticPath = path("static")
 	MediaPath = path("media")
 	Templates = path("templates/*")

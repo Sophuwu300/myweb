@@ -23,7 +23,7 @@ function getCookie(cname) {
 
 function check_theme() {
     let theme = getCookie("light_theme");
-    if (theme === "light") {
+    if (theme == "light") {
         document.getElementById("csstheme").href = "/static/style_light.css";
     } else {
         document.getElementById("csstheme").href = "/static/style_dark.css";
@@ -32,10 +32,12 @@ function check_theme() {
 
 function toggle_theme() {
     let theme = getCookie("light_theme");
-    if (theme === "light") {
+    if (theme == "light") {
         setCookie("light_theme", "dark", 30);
     } else {
         setCookie("light_theme", "light", 30);
     }
     check_theme();
 }
+
+check_theme();
