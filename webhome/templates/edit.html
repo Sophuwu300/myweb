@@ -1,0 +1,27 @@
+{{ define "edit" }}
+<html lang="en">
+{{ template "head" . }}
+<body>
+{{ template "nav" . }}
+<main>
+    <h2>{{ .Title }}</h2>
+    <p>
+        {{ .Description }}
+    </p>
+    <br>
+    {{ if .Media }}
+    <form action="/manage/media/" method="post" style="width: 100%;" enctype="multipart/form-data">
+        <input type="file" name="file1" id="file1">
+        <input type="submit">
+    </form>
+    {{ else }}
+    <form action="/manage/edit/save" method="post" style="width: 100%;">
+       <textarea name="data" rows="30" cols="100" style="width: 100%;">{{ .Data }}</textarea>
+        <br>
+        <input type="submit" value="Save">
+    </form>
+    {{ end }}
+</main>
+</body>
+</html>
+{{ end }}

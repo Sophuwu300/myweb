@@ -28,7 +28,7 @@ func IdGen(title, date string) string {
 	return filepath.Join(date, url.PathEscape(title))
 }
 
-func NewBlog(title, desc, body string, date ...string) error {
+func SaveBlog(title, desc, body string, date ...string) error {
 	if len(date) == 0 {
 		date = append(date, time.Now().Format("2006-01-02"))
 	}

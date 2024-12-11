@@ -126,6 +126,34 @@ hr {
     width: calc(100% + 1rem);
     transform: translateX(-0.5rem);
 }
+.about-me {
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+}
+.about-me > div {
+    @media (max-width: 800px) {
+        max-width: 100%;
+        width: 100%;
+        padding: 0;
+        margin: 10px auto;
+    }
+    @media (min-width: 800px) {
+        max-width: calc(100% - 240px);
+        width: 100%;
+        padding: 0;
+        margin: 10px auto;
+    }
+
+}
+.about-me img {
+    width: 200px;
+    height: auto;
+    margin: 10px 10px 10px 0;
+    border-radius: 1em;
+}
 
 button:hover {
     transform: translateY(-2px);

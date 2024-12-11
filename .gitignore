@@ -2,3 +2,5 @@ build/
 webhome/*.sqlite
 webhome/*.db
 webhome/media/*
+webhome/*.log
+webhome/userpass

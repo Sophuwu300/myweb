@@ -4,7 +4,32 @@
 <body>
 {{ template "nav" . }}
 <main>
-    {{- .HTML -}}
+    <h2>About Me</h2>
+    <div class="about-me">
+        <div>
+            {{ range .AboutText }}
+            <p>{{ . }}</p>
+            {{ end }}
+        </div>
+        <img src="{{ .ImagePath }}" alt="Just a picture of me.">
+    </div>
+    <br>
+    <hr>
+    <h2>
+        Online Profiles
+    </h2>
+    {{ range .Profiles }}
+    <p>
+        <b class="icon">{{ .Icon }}</b> {{ .Website }}: <a href="{{ .URL }}">{{ .User }}</a>
+    </p>
+    {{ end }}
+    <br>
+    <hr>
+    <h2>
+        Contact
+    </h2>
+    <p>
+        <b class="icon">E</b> Email: <a href="mailto:{{ .Email }}">{{ .Email }}</a>
 </main>
 </body>
 </html>

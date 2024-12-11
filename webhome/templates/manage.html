@@ -1,0 +1,15 @@
+{{ define "manage" }}
+<html lang="en">
+{{ template "head" . }}
+<body>
+<main>
+    <h2>
+        {{ .Title }} {{ .Description }}
+    </h2>
+    {{ range .Options }}
+    <a href="{{ .URL }}">{{ .Name }}</a><br>
+    {{ end }}
+</main>
+</body>
+</html>
+{{ end }}

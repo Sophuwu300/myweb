@@ -5,19 +5,48 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 var (
-	ListenAddr string
-	WebRoot    string
-	StaticPath string
-	MediaPath  string
-	Templates  string
-	DBPath     string
-	Email      string
-	Name       string
-	URL        string
+	ListenAddr   string
+	WebRoot      string
+	StaticPath   string
+	MediaPath    string
+	Templates    string
+	DBPath       string
+	Email        string
+	Name         string
+	URL          string
+	passHash     str
+	passLoadTime time.Time
 )
+
+type str string
+
+func (s str) Bytes() []byte {
+	return []byte(s)
+}
+func (s str) String() string {
+	return string(s)
+
+}
+
+func PassHash() str {
+	if time.Since(passLoadTime) > 5*time.Minute {
+		passLoad()
+	}
+	return passHash
+}
+
+func passLoad() {
+	b, err := os.ReadFile(path("userpass"))
+	if err != nil {
+		log.Fatalf("Error reading userpass: %v", err)
+	}
+	passHash = str(bytes.TrimSpace(b))
+	passLoadTime = time.Now()
+}
 
 func path(p string) string {
 	return filepath.Join(WebRoot, p)
@@ -62,5 +91,5 @@ func init() {
 	Email = mm["email"]
 	Name = mm["name"]
 	URL = mm["url"]
-
+	passLoad()
 }
