@@ -4,21 +4,21 @@
 <body>
 {{ template "nav" . }}
 <main>
-    <h1>Blogs</h1>
-    {{ if .Desc }}
+    <h2>Blogs</h2>
     <p>
-        {{ .Desc }}
+        {{ .Description }}
     </p>
-    {{ end }}
+    <p>
+        {{ .NoBlogs }} blogs found. Showing newest first.
+    </p>
     <hr>
-    {{ range .Blogs }}
-    <section>
-        <a href="/blog/{{ .ID }}" class="index-name">{{ .Name }}</a>
-        <span style="margin: 0 10px;">{{ .Date }}</span>
-        <br>
-        <span style="text-align: justify; width: 100% !important;" class="desc">{{ .Desc }}</span>
-        <hr>
+    {{- range .blogs -}}
+    <section class="blog-row">
+        <a href="/blog/{{- .ID -}}" class="ref-name">{{- .Title -}}</a>
+        <span class="date">{{- .Date -}}</span>
+        <p >{{- .Desc -}}</p>
     </section>
+    <hr>
     {{ end }}
 </main>
 </body>

@@ -29,11 +29,14 @@
 html, body, p {
 	font-family: "Ubuntu Sans", sans-serif;
 }
-h1, h2, h3, h4, h5, h6, button, a{
+h1, h2, h3, h4, h5, h6, button, a, .date {
 	font-family:   "Comfortaa", cursive;
 }
 pre, code {
 	font-family: "Victor Mono", monospace;
+}
+a {
+    text-decoration: none;
 }
 
 html {
@@ -101,6 +104,8 @@ hr {
     border: none;
     border-bottom-style: solid;
     border-bottom-width: 1px;
+    width: calc(100% + 1rlh);
+    transform: translateX(-0.5rlh);
 }
 
 button:hover {
@@ -134,4 +139,34 @@ button {
     font-weight: normal!important;
     font-style: normal;
     height: 1em;
+}
+
+h2 {
+    margin: 0.5lh 0 0.25lh;
+    font-size: 1.5rem;
+}
+p {
+    line-height: 1.2;
+    margin: 0.25lh 0;
+    text-align: justify;
+}
+.date {
+    font-size: 0.75rem;
+    font-weight: bold;
+    line-height: 1.5;
+}
+.ref-name {
+    margin: 0.25lh 0;
+    font-size: 1.2rem;
+}
+.blog-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin: 0.25em 0;
+}
+article {
+    margin: 1lh 0;
 }

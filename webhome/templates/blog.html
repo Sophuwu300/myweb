@@ -1,0 +1,15 @@
+{{ define "blog" }}
+<html lang="en">
+{{ template "head" . }}
+<body>
+{{ template "nav" . }}
+<main>
+    <h2>{{ .Title }}</h2>
+    <span class="date">{{ .Date }}</span>
+    <article>
+    {{- .HTML -}}
+    </article>
+</main>
+</body>
+</html>
+{{ end }}

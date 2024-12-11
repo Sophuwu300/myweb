@@ -40,7 +40,7 @@ hr {
 ::-webkit-scrollbar-thumb:hover {
     background: #dddddd;
 }
-.project-meta {
+.date {
     color: #333;
 }
 .filebutton {

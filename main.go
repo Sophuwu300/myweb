@@ -2,27 +2,20 @@ package main
 
 import (
 	"context"
-	"crypto/sha1"
-	"encoding/base64"
 	"errors"
-	"fmt"
 	"golang.org/x/sys/unix"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"sophuwu.site/myweb/config"
+	"sophuwu.site/myweb/template"
 )
-
-func Sha1Base64(data ...any) string {
-	h := sha1.New()
-	h.Write([]byte(fmt.Sprint(data...)))
-	return base64.StdEncoding.EncodeToString(h.Sum(nil))
-}
 
 func CheckHttpErr(err error, w http.ResponseWriter, r *http.Request, code int) bool {
 	if err != nil {
 		HttpErr(w, r, code)
+		log.Printf("err: %v: HTTP %d: %s %s\n", err, code, r.Method, r.URL.Path)
 		return true
 	}
 	return false
@@ -30,16 +23,14 @@ func CheckHttpErr(err error, w http.ResponseWriter, r *http.Request, code int) b
 
 func HttpErr(w http.ResponseWriter, r *http.Request, code int) {
 	http.Error(w, http.StatusText(code), code)
-	log.Printf("HTTP %d: %s %s\n", code, r.Method, r.URL.Path)
 }
 
 func HttpIndex(w http.ResponseWriter, r *http.Request) {
-	var d HTMLDataMap
-	err := DB.Get("pages", "index", &d)
+	d, err := GetPageData("index")
 	if CheckHttpErr(err, w, r, 500) {
 		return
 	}
-	err = Templates.Use(w, r, "index", d)
+	err = template.Use(w, r, "index", d)
 	_ = CheckHttpErr(err, w, r, 500)
 }
 
@@ -60,18 +51,14 @@ func HttpFS(path, fspath string) (string, http.HandlerFunc) {
 }
 
 func main() {
-	err := Templates.Init()
 	OpenDB()
-
-	d := HTMLData(config.Name, fmt.Sprintf("About %s. look at animations I've made, read about things I've found interesting. Links to my social media.", config.Name))
-	d.SetHTML("Content", "<h1>Welcome to my website</h1><p>Here you can find animations I've made, blogs I've written, and other things I've found interesting.</p>")
-	DB.Set("pages", "index", &d)
-
+	err := template.Init(config.Templates)
 	if err != nil {
 		log.Fatalf("Error initializing templates: %v", err)
 	}
 
 	http.HandleFunc("/", HttpIndex)
+	http.HandleFunc("/blog/", BlogHandler)
 	http.HandleFunc(HttpFS("/static/", config.StaticPath))
 	http.HandleFunc(HttpFS("/media/", config.MediaPath))
 
