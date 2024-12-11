@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"golang.org/x/sys/unix"
 	"log"
 	"net/http"
@@ -21,11 +22,35 @@ func CheckHttpErr(err error, w http.ResponseWriter, r *http.Request, code int) b
 	return false
 }
 
+var HttpErrs = map[int]string{
+	401: "Unauthorized: You must log in to access this page.",
+	403: "Forbidden: You do not have permission to access this page.",
+	404: "Not found: the requested page does not exist. Please check the URL and try again.",
+	500: "Internal server error: the server encountered an error while processing your request. Please try again later.",
+}
+
 func HttpErr(w http.ResponseWriter, r *http.Request, code int) {
-	http.Error(w, http.StatusText(code), code)
+	w.WriteHeader(code)
+	var ErrTxt string
+	if t, ok := HttpErrs[code]; ok {
+		ErrTxt = t
+	} else {
+		ErrTxt = "An error occurred. Please try again later."
+	}
+	data := template.Data("An error occurred", fmt.Sprintf("%d: %s", code, ErrTxt))
+	data.Set("ErrText", ErrTxt)
+	data.Set("ErrCode", code)
+	err := template.Use(w, r, "err", data)
+	if err != nil {
+		log.Printf("error writing error page: %v", err)
+	}
 }
 
 func HttpIndex(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		HttpErr(w, r, 404)
+		return
+	}
 	d, err := GetPageData("index")
 	if CheckHttpErr(err, w, r, 500) {
 		return
@@ -34,20 +59,8 @@ func HttpIndex(w http.ResponseWriter, r *http.Request) {
 	_ = CheckHttpErr(err, w, r, 500)
 }
 
-type HttpHjk struct {
-	http.ResponseWriter
-	status int
-}
-
-func HttpFS(path, fspath string) (string, http.HandlerFunc) {
-	fileServer := http.StripPrefix(path, http.FileServer(http.Dir(fspath)))
-	return path, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		hijack := &HttpHjk{ResponseWriter: w}
-		fileServer.ServeHTTP(hijack, r)
-		if hijack.status >= 400 && hijack.status < 600 {
-			HttpErr(w, r, hijack.status)
-		}
-	})
+func HttpFS(path, fspath string) {
+	http.Handle(path, http.StripPrefix(path, http.FileServer(http.Dir(fspath))))
 }
 
 func main() {
@@ -59,8 +72,9 @@ func main() {
 
 	http.HandleFunc("/", HttpIndex)
 	http.HandleFunc("/blog/", BlogHandler)
-	http.HandleFunc(HttpFS("/static/", config.StaticPath))
-	http.HandleFunc(HttpFS("/media/", config.MediaPath))
+	HttpFS("/static/", config.StaticPath)
+	http.HandleFunc("/media/", MediaHandler)
+	// HttpFS("/media/", config.MediaPath)
 
 	server := http.Server{Addr: config.ListenAddr, Handler: nil}
 	go func() {

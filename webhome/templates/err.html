@@ -4,15 +4,15 @@
 <body>
 {{ template "nav" . }}
 <main>
-    <h1>An Error Occurred</h1>
-    <h4>Code: {{ .Code }}</h4>
-    <p>
-        {{ .Text }}
-    </p>
-    <p>
-        If you believe this is an error, please contact <a href="mailto:{{ .Email }}">{{ .Email }}</a>.
-    </p>
+    <section class="center">
+        <h1>{{ .ErrCode }}</h1>
+        <h3>{{ .ErrText }}</h3>
+    </section>
 </main>
+<footer>
+    <hr>
+    <p>If this looks like a mistake, or the problem persists, please contact the administrator at <a href="mailto:{{ .Email }}">{{ .Email }}</a>    </p>
+</footer>
 </body>
 </html>
 {{ end }}
