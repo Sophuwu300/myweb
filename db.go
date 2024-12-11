@@ -79,15 +79,17 @@ func EditIndex(w http.ResponseWriter, r *http.Request) {
 	HttpErr(w, r, 405)
 }
 
+type UrlOpt struct{ Name, URL string }
+
 func ManagerHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/manage/" {
 		data := template.Data("Manage", config.URL)
-		data["Options"] = []struct{ Name, URL string }{
+		data["Options"] = []UrlOpt{
 			{"Edit index", "/manage/edit/"},
 			{"Upload media", "/manage/media/"},
 			{"Delete media", "/manage/delete/media/"},
-			{"Post blog", "/manage/blog/"},
-			{"Add Animation", "/manage/animation/"},
+			{"Manage blogs", "/manage/blog/"},
+			{"Manage Animations", "/manage/animation/"},
 			{"Backup", "/manage/backup/"},
 		}
 		err := template.Use(w, r, "manage", data)
@@ -104,6 +106,14 @@ func ManagerHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if strings.HasPrefix(r.URL.Path, "/manage/delete/media/") {
 		DeleteMedia(w, r)
+		return
+	}
+	if r.URL.Path == "/manage/animation/" {
+		AnimManager(w, r)
+		return
+	}
+	if r.URL.Path == "/manage/blog/" {
+		BlogManager(w, r)
 		return
 	}
 	HttpErr(w, r, 404)

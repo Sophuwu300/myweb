@@ -1,0 +1,35 @@
+{{ define "anims" }}
+<html lang="en">
+{{ template "head" . }}
+<body>
+{{ template "nav" . }}
+<main>
+    <h2>Animations</h2>
+    <p>
+        {{ .Description }}
+    </p>
+    <p>
+        Showing {{ .NoAnims }} animations.
+    </p>
+    <hr>
+
+    {{- range .Anims -}}
+    <section class="anim-row" id="{{ .ID }}">
+        <h3>{{ .Title }}</h3>
+        <span class="date">{{ .Date }}</span>
+        <p>{{ .Desc }}</p>
+        <div class="anim-media">
+        {{ range .Vids }}
+        <video src="/media/{{ . }}" class="animation" loading="lazy" autoplay="" loop="" muted=""></video>
+        {{ end }}
+        {{ range .Imgs }}
+        <img src="/media/{{ . }}" class="animation" loading="lazy">
+        {{ end }}
+        </div>
+    </section>
+    <hr>
+    {{ end }}
+</main>
+</body>
+</html>
+{{ end }}

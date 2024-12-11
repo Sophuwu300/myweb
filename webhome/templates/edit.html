@@ -15,11 +15,83 @@
         <input type="submit">
     </form>
     {{ else }}
+    {{ if .AnimUrl }}
+    <form action="{{ .AnimUrl }}" method="post" style="width: 100%;">
+        <table>
+            <tr>
+                <td>ID:</td>
+                <td><input type="text" name="id" value="{{ .Anim.ID }}" readonly></td>
+            </tr>
+            <tr>
+                <td>Title:</td>
+                <td><input type="text" name="title" value="{{ .Anim.Title }}"></td>
+            </tr>
+            <tr>
+                <td>Date:</td>
+                <td><input type="text" name="date" value="{{ .Anim.Date }}"></td>
+            </tr>
+            <tr>
+                <td>Description:</td>
+                <td><textarea name="desc" rows="5" cols="50">{{ .Anim.Desc }}</textarea></td>
+            </tr>
+            <tr>
+                <td>Video:</td>
+                <td><textarea name="vids" rows="5" cols="50">{{ range .Anim.Vids }}{{ . }}{{ end }}</textarea></td>
+            </tr>
+            <tr>
+                <td>Image:</td>
+                <td><textarea name="imgs" rows="5" cols="50">{{ range .Anim.Imgs }}{{ . }}{{ end }}</textarea></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Save"></td>
+            </tr>
+        </table>
+    </form>
+    {{ else }}
+    {{ if .BlogUrl }}
+    <div class="splits">
+    <form action="{{ .BlogUrl }}" method="post" style="width: 100%;">
+        <table>
+            <tr>
+                <td>ID:</td>
+                <td><input type="text" name="id" value="{{ .BlogID }}" readonly></td>
+            </tr>
+            {{ if eq .BlogID "new" }}
+            <tr>
+                <td>Title:</td>
+                <td><input type="text" name="title" ></td>
+            </tr>
+            <tr>
+                <td>Date:</td>
+                <td><input type="text" name="date" ></td>
+            </tr>
+            {{ end }}
+            <tr>
+                <td>Description:</td>
+                <td><textarea name="desc" rows="5" cols="50">{{ .BlogDesc }}</textarea></td>
+            </tr>
+            <tr>
+                <td>Content:</td>
+                <td><textarea name="content" id="blog-text" rows="30" cols="100">{{ .BlogContent }}</textarea></td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td><input type="submit" value="Save"></td>
+            </tr>
+        </table>
+    </form>
+    <article id="blog-view"></article>
+    </div>
+    {{ else }}
     <form action="/manage/edit/save" method="post" style="width: 100%;">
        <textarea name="data" rows="30" cols="100" style="width: 100%;">{{ .Data }}</textarea>
         <br>
         <input type="submit" value="Save">
     </form>
+    {{ end }}
+    {{ end }}
     {{ end }}
 </main>
 </body>

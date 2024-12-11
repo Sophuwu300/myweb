@@ -61,17 +61,6 @@ func GetBlog(id string) (meta BlogMeta, content BlogContent, err error) {
 	return
 }
 
-func SortBlogsDate(blogs []BlogMeta) []BlogMeta {
-	for i := 0; i < len(blogs); i++ {
-		for j := i + 1; j < len(blogs); j++ {
-			if blogs[i].Date < blogs[j].Date {
-				blogs[i], blogs[j] = blogs[j], blogs[i]
-			}
-		}
-	}
-	return blogs
-}
-
 func GetBlogs() ([]BlogMeta, error) {
 	var blogs []BlogMeta
 	// err := DB.All(&blogs)
@@ -79,7 +68,13 @@ func GetBlogs() ([]BlogMeta, error) {
 	if err != nil {
 		return nil, err
 	}
-	blogs = SortBlogsDate(blogs)
+	for i := 0; i < len(blogs); i++ {
+		for j := i + 1; j < len(blogs); j++ {
+			if blogs[i].Date < blogs[j].Date {
+				blogs[i], blogs[j] = blogs[j], blogs[i]
+			}
+		}
+	}
 	return blogs, err
 }
 
@@ -90,7 +85,11 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 		if CheckHttpErr(err, w, r, 500) {
 			return
 		}
-		d := template.Data("Sophie's Blogs", "I sometimes write blogs about random things that I find interesting. Here you can read all my posts about various things I found interesting at some point.")
+		var d template.HTMLDataMap
+		err = DB.Get("pages", "blogs", &d)
+		if CheckHttpErr(err, w, r, 500) {
+			return
+		}
 		d["blogs"] = []BlogMeta(blogs)
 		d.Set("NoBlogs", len(blogs))
 
@@ -107,4 +106,101 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 	data.SetHTML(content.Content)
 	err = template.Use(w, r, "blog", data)
 	CheckHttpErr(err, w, r, 500)
+}
+
+func BlogManageList(w http.ResponseWriter, r *http.Request) {
+	blogs, err := GetBlogs()
+	if CheckHttpErr(err, w, r, 500) {
+		return
+	}
+	opts := make([]UrlOpt, len(blogs)+1)
+	opts[0] = UrlOpt{Name: "Add new blog", URL: "/manage/blog/?id=new"}
+	for i, b := range blogs {
+		opts[i+1] = UrlOpt{Name: b.Title, URL: "/manage/blog/?id=" + b.ID}
+	}
+	d := template.Data("Manage blogs", "List of blogs")
+	d.Set("Options", opts)
+	err = template.Use(w, r, "manage", d)
+	CheckHttpErr(err, w, r, 500)
+	return
+}
+
+func BlogManager(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/manage/blog/" {
+		HttpErr(w, r, 404)
+		return
+	}
+	if r.Method == "GET" {
+		id := r.URL.Query().Get("id")
+		if id == "" {
+			BlogManageList(w, r)
+			return
+		}
+		if id == "new" {
+			var data = template.Data("New blog", "Create a new blog")
+			data.Set("BlogUrl", "/manage/blog/")
+			data.Set("BlogID", "new")
+			data.Set("BlogDesc", "")
+			data.Set("BlogContent", "")
+			err := template.Use(w, r, "edit", data)
+			CheckHttpErr(err, w, r, 500)
+			return
+		}
+		meta, content, err := GetBlog(id)
+		if CheckHttpErr(err, w, r, 404) {
+			return
+		}
+		data := template.Data("Edit blog "+meta.Title, "Make changes to the content or description")
+		data.Set("BlogUrl", "/manage/blog/")
+		data.Set("BlogID", meta.ID)
+		data.Set("BlogDesc", meta.Desc)
+		data.Set("BlogContent", content.Content)
+		err = template.Use(w, r, "edit", data)
+		CheckHttpErr(err, w, r, 500)
+		return
+	}
+	if r.Method == "POST" {
+		err := r.ParseForm()
+		if CheckHttpErr(err, w, r, 500) {
+			return
+		}
+		id := r.Form.Get("id")
+		title := r.Form.Get("title")
+		desc := r.Form.Get("desc")
+		body := r.Form.Get("content")
+		date := r.Form.Get("date")
+		if id == "" || desc == "" || body == "" || (id == "new" && title == "") {
+			HttpErr(w, r, 400)
+			return
+		}
+		if date == "" {
+			date = time.Now().Format("2006-01-02")
+		}
+		if id == "new" {
+			err = SaveBlog(title, desc, body, date)
+			CheckHttpErr(err, w, r, 500)
+			http.Redirect(w, r, "/manage/blog/", 302)
+			return
+		}
+		meta, content, err := GetBlog(id)
+		if CheckHttpErr(err, w, r, 500) {
+			return
+		}
+		if meta.Desc != desc {
+			meta.Desc = desc
+			err = DB.Update(&meta)
+			if CheckHttpErr(err, w, r, 500) {
+				return
+			}
+		}
+		if content.Content != body {
+			content.Content = body
+			err = DB.Update(&content)
+			if CheckHttpErr(err, w, r, 500) {
+				return
+			}
+		}
+		http.Redirect(w, r, "/manage/blog/", 302)
+		return
+	}
 }

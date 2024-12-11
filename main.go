@@ -98,6 +98,7 @@ func main() {
 	http.HandleFunc("/blog/", BlogHandler)
 	HttpFS("/static/", config.StaticPath)
 	http.HandleFunc("/media/", MediaHandler)
+	http.HandleFunc("/animations/", AnimHandler)
 	http.Handle("/manage/", Authenticate(ManagerHandler))
 
 	server := http.Server{Addr: config.ListenAddr, Handler: nil}
