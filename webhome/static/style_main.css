@@ -87,7 +87,7 @@ header h1::before {
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center center;
-    background-image: url("/static/favicon.png");
+    background-image: url("/static/favicon.webp");
     padding: 0;
     margin: 0 0.25ch 0 0;
 }
@@ -122,14 +122,16 @@ button {
 }
 
 @font-face {
-    font-family: "iconfont";
-    src: url("/static/icons.ttf") format("truetype");
+    font-family: "sophuwuicons";
+    src: url("/static/icons.woff2") format("woff2"),
+    url("/static/icons.ttf") format("truetype")
+
 }
 
 .icon {
-    font-family: "iconfont";
+    font-family: "sophuwuicons";
     font-size: inherit;
-    font-weight: normal;
+    font-weight: normal!important;
     font-style: normal;
     height: 1em;
 }

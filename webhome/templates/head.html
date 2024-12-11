@@ -9,11 +9,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="/static/scripts.js"></script>
     <style id="tmpcss"></style>
+    {{ if .Title }}
     <title>{{ .Title }}</title>
     <meta content="{{ .Title }}" property="og:title" name="twitter:title">
+    {{ end }}
+    {{ if .Description }}
     <meta content="{{ .Description }}" property="og:description" name="twitter:description">
+    {{ end }}
     <meta content="{{ .Url }}" property="og:url" name="url">
+    {{ if .Image }}
+    <meta content="{{ .Image }}" property="og:image" name="twitter:image">
+    {{ end }}
+    {{ if .Name }}
     <meta name="author" content="{{ .Name }}">
+    {{ end }}
     <meta name="robots" content="index, follow">
 </head>
 {{ end }}

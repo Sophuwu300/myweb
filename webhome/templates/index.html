@@ -2,19 +2,9 @@
 <html lang="en">
 {{ template "head" . }}
 <body>
-{{ template "header" . }}
+{{ template "nav" . }}
 <main>
-
-    <h1>
-        Sophie Kisiel
-    </h1>
-
-    <p>
-        Welcome to my website! I'm a software engineer and I love to code.
-    </p>
-
-
-
+    {{- .HTML -}}
 </main>
 </body>
 </html>

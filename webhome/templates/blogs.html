@@ -2,16 +2,18 @@
 <html lang="en">
 {{ template "head" . }}
 <body>
-{{ template "header" . }}
+{{ template "nav" . }}
 <main>
     <h1>Blogs</h1>
+    {{ if .Desc }}
     <p>
-        {{ len .Blogs }} blogs found.
+        {{ .Desc }}
     </p>
+    {{ end }}
     <hr>
     {{ range .Blogs }}
     <section>
-        <a href="/blog/{{ .Name }}" class="index-name">{{ .Name }}</a>
+        <a href="/blog/{{ .ID }}" class="index-name">{{ .Name }}</a>
         <span style="margin: 0 10px;">{{ .Date }}</span>
         <br>
         <span style="text-align: justify; width: 100% !important;" class="desc">{{ .Desc }}</span>

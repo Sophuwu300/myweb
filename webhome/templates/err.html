@@ -1,0 +1,18 @@
+{{ define "err" }}
+<html lang="en">
+{{ template "head" . }}
+<body>
+{{ template "nav" . }}
+<main>
+    <h1>An Error Occurred</h1>
+    <h4>Code: {{ .Code }}</h4>
+    <p>
+        {{ .Text }}
+    </p>
+    <p>
+        If you believe this is an error, please contact <a href="mailto:{{ .Email }}">{{ .Email }}</a>.
+    </p>
+</main>
+</body>
+</html>
+{{ end }}

@@ -13,6 +13,7 @@ var (
 	StaticPath string
 	MediaPath  string
 	Templates  string
+	DBPath     string
 	Email      string
 	Name       string
 	URL        string
@@ -26,6 +27,7 @@ func init() {
 	if len(os.Args) < 2 {
 		log.Fatalf("Usage: %s <config file>", os.Args[0])
 	}
+
 	file, err := os.ReadFile(os.Args[1])
 	if err != nil {
 		log.Fatalf("Error opening config: %v", err)
@@ -56,6 +58,7 @@ func init() {
 	StaticPath = path("static")
 	MediaPath = path("media")
 	Templates = path("templates/*")
+	DBPath = path("data.db")
 	Email = mm["email"]
 	Name = mm["name"]
 	URL = mm["url"]
