@@ -15,6 +15,8 @@ import (
 	"strings"
 )
 
+// CheckHttpErr will check if err is not nil. It will then handle the HTTP
+// response and return true if an error occurred.
 func CheckHttpErr(err error, w http.ResponseWriter, r *http.Request, code int) bool {
 	if err != nil {
 		HttpErr(w, r, code)
@@ -24,6 +26,7 @@ func CheckHttpErr(err error, w http.ResponseWriter, r *http.Request, code int) b
 	return false
 }
 
+// HttpErrs is a map of HTTP error codes to error messages.
 var HttpErrs = map[int]string{
 	400: "Bad request: the server could not understand your request. Please check the URL and try again.",
 	401: "Unauthorized: You must log in to access this page.",
@@ -33,6 +36,7 @@ var HttpErrs = map[int]string{
 	500: "Internal server error: the server encountered an error while processing your request. Please try again later.",
 }
 
+// HttpErr will write an HTTP error response with the given status code.
 func HttpErr(w http.ResponseWriter, r *http.Request, code int) {
 	w.WriteHeader(code)
 	var ErrTxt string
@@ -50,6 +54,7 @@ func HttpErr(w http.ResponseWriter, r *http.Request, code int) {
 	}
 }
 
+// HttpIndex is the handler for the index page.
 func HttpIndex(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		HttpErr(w, r, 404)
@@ -64,10 +69,9 @@ func HttpIndex(w http.ResponseWriter, r *http.Request) {
 	_ = CheckHttpErr(err, w, r, 500)
 }
 
-func HttpFS(path, fspath string) {
-	http.Handle(path, http.StripPrefix(path, http.FileServer(http.Dir(fspath))))
-}
-
+// Profile is a struct that holds information about profiles on
+// social media or other external websites.
+// Icon is used for a rune to display from the Sophuwu iconfont.
 type Profile struct {
 	Icon    string
 	Website string
@@ -75,6 +79,10 @@ type Profile struct {
 	User    string
 }
 
+// Authenticate is a middleware that checks for basic authentication.
+// Passwords are hashed with bcrypt, stored in the userpass file in the
+// webhome directory. The file only contains one line, the bcrypt hash.
+// The hash is generated hashing the string "user:password" with bcrypt.
 func Authenticate(next http.HandlerFunc) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, apass, authOK := r.BasicAuth()
@@ -87,6 +95,7 @@ func Authenticate(next http.HandlerFunc) http.Handler {
 	})
 }
 
+// main is the entry point for the web server.
 func main() {
 	OpenDB()
 	err := template.Init(config.Templates)
@@ -96,7 +105,7 @@ func main() {
 
 	http.HandleFunc("/", HttpIndex)
 	http.HandleFunc("/blog/", BlogHandler)
-	HttpFS("/static/", config.StaticPath)
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(config.StaticPath))))
 	http.HandleFunc("/media/", MediaHandler)
 	http.HandleFunc("/animations/", AnimHandler)
 	http.Handle("/manage/", Authenticate(ManagerHandler))

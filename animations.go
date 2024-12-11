@@ -3,13 +3,13 @@ package main
 import (
 	"crypto/md5"
 	"encoding/base64"
-	"encoding/json"
 	"net/http"
 	"sophuwu.site/myweb/template"
 	"strings"
 	"time"
 )
 
+// AnimInfo is a struct that holds information about an animation.
 type AnimInfo struct {
 	ID    string `storm:"id"`
 	Title string
@@ -19,10 +19,14 @@ type AnimInfo struct {
 	Vids  []string
 }
 
+// HasReqFields checks if all required fields have a non-empty value.
 func (a *AnimInfo) HasReqFields() bool {
 	return a.Title != "" && a.Desc != "" && (len(a.Imgs)+len(a.Vids) > 0) && a.Date != "" && a.ID != ""
 }
 
+// GenAnimID generates an ID for an animation. It will generate a different ID
+// each time it is called, even if the input is the same. This allows for
+// multiple animations with the same title to be stored without conflict.
 func GenAnimID(a AnimInfo) AnimInfo {
 	md := md5.New()
 	md.Write([]byte(time.Now().String() + a.Title))
@@ -33,25 +37,21 @@ func GenAnimID(a AnimInfo) AnimInfo {
 	return a
 }
 
+// GetAnim retrieves AnimInfo from the database with the given ID.
+// If the ID is not found, an error is returned.
 func GetAnim(id string) (AnimInfo, error) {
 	var a AnimInfo
 	err := DB.One("ID", id, &a)
 	return a, err
 }
 
-func AnimSaveJson(js string) error {
-	var a AnimInfo
-	err := json.Unmarshal([]byte(js), &a)
-	if err != nil {
-		return err
-	}
-	return DB.Save(&a)
-}
-
+// AnimDelete deletes an animation from the database with the given ID.
 func AnimDelete(id string) error {
 	return DB.DeleteStruct(&AnimInfo{ID: id})
 }
 
+// GetAnims retrieves all animations from the database. The animations are
+// sorted by date, with the most recent first in []AnimInfo.
 func GetAnims() ([]AnimInfo, error) {
 	var anims []AnimInfo
 	err := DB.All(&anims)
@@ -68,11 +68,12 @@ func GetAnims() ([]AnimInfo, error) {
 	return anims, nil
 }
 
+// AnimHandler is a http.HandlerFunc that serves the animations page.
+// It retrieves all animations from the database and displays them.
 func AnimHandler(w http.ResponseWriter, r *http.Request) {
 	anims, err := GetAnims()
 	CheckHttpErr(err, w, r, 500)
-	var d template.HTMLDataMap
-	err = DB.Get("pages", "anims", &d)
+	d, err := GetPageData("anims")
 	if CheckHttpErr(err, w, r, 500) {
 		return
 	}
@@ -82,6 +83,9 @@ func AnimHandler(w http.ResponseWriter, r *http.Request) {
 	CheckHttpErr(err, w, r, 500)
 }
 
+// AnimManageList is a http.HandlerFunc that serves the animation manager list.
+// It retrieves all animations from the database and displays them as a list.
+// With each animation, there is a link to edit the details of that animation.
 func AnimManageList(w http.ResponseWriter, r *http.Request) {
 	anims, err := GetAnims()
 	if CheckHttpErr(err, w, r, 500) {
@@ -99,6 +103,10 @@ func AnimManageList(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+// AnimManager is a http.HandlerFunc that serves the animation manager. It
+// allows the user to edit an existing animation or create a new one.
+// If the ID is "new", a new animation is created. Otherwise, the animation
+// with the given ID is retrieved from the database and displayed for editing.
 func AnimManager(w http.ResponseWriter, r *http.Request) {
 	if "/manage/animation/" != r.URL.Path {
 		HttpErr(w, r, 404)

@@ -85,11 +85,17 @@
     <article id="blog-view"></article>
     </div>
     {{ else }}
-    <form action="/manage/edit/save" method="post" style="width: 100%;">
+    {{ if .EditUrl }}
+    <form action="{{ .EditUrl }}" method="post" style="width: 100%;">
        <textarea name="data" rows="30" cols="100" style="width: 100%;">{{ .Data }}</textarea>
         <br>
         <input type="submit" value="Save">
     </form>
+    {{ else }}
+    <p>
+        No editor found.
+    </p>
+    {{ end }}
     {{ end }}
     {{ end }}
     {{ end }}

@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+// BlogMeta is the metadata for a blog post in the database
 type BlogMeta struct {
 	ID    string `storm:"unique"`
 	Title string `storm:"index"`
@@ -18,21 +19,24 @@ type BlogMeta struct {
 	Desc  string `storm:"index"`
 }
 
+// BlogContent is the content of a blog post in the database
 type BlogContent struct {
 	ID      string `storm:"unique"`
 	Content string `storm:"index"`
 }
 
-func IdGen(title, date string) string {
+// BlogIdGen generates a unique id for a blog post
+func BlogIdGen(title, date string) string {
 	title = strings.ReplaceAll(title, " ", "-")
 	return filepath.Join(date, url.PathEscape(title))
 }
 
+// SaveBlog saves a blog post to the database with arguments
 func SaveBlog(title, desc, body string, date ...string) error {
 	if len(date) == 0 {
 		date = append(date, time.Now().Format("2006-01-02"))
 	}
-	id := IdGen(title, date[0])
+	id := BlogIdGen(title, date[0])
 
 	err := DB.Save(&BlogContent{
 		ID:      id,
@@ -52,6 +56,8 @@ func SaveBlog(title, desc, body string, date ...string) error {
 	return err
 }
 
+// GetBlog retrieves a blog post from the database by id and returns the metadata and content
+// as BlogMeta and BlogContent respectively. Returns an error if the blog post is not found.
 func GetBlog(id string) (meta BlogMeta, content BlogContent, err error) {
 	err = DB.One("ID", id, &content)
 	if err != nil {
@@ -61,6 +67,8 @@ func GetBlog(id string) (meta BlogMeta, content BlogContent, err error) {
 	return
 }
 
+// GetBlogs retrieves all blog posts from the database and returns them as a slice of BlogMeta.
+// Returns an error if the database query fails.
 func GetBlogs() ([]BlogMeta, error) {
 	var blogs []BlogMeta
 	// err := DB.All(&blogs)
@@ -78,6 +86,7 @@ func GetBlogs() ([]BlogMeta, error) {
 	return blogs, err
 }
 
+// BlogHandler handles requests to the blog page and individual blog posts
 func BlogHandler(w http.ResponseWriter, r *http.Request) {
 	path := strings.TrimPrefix(r.URL.Path, "/blog/")
 	if path == "" {
@@ -85,8 +94,7 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 		if CheckHttpErr(err, w, r, 500) {
 			return
 		}
-		var d template.HTMLDataMap
-		err = DB.Get("pages", "blogs", &d)
+		d, err := GetPageData("blogs")
 		if CheckHttpErr(err, w, r, 500) {
 			return
 		}
@@ -108,6 +116,7 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 	CheckHttpErr(err, w, r, 500)
 }
 
+// BlogManageList handles the /manage/blog/ route for listing all blog posts
 func BlogManageList(w http.ResponseWriter, r *http.Request) {
 	blogs, err := GetBlogs()
 	if CheckHttpErr(err, w, r, 500) {
@@ -125,6 +134,7 @@ func BlogManageList(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+// BlogManager handles the /manage/blog/ route for managing blog posts
 func BlogManager(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/manage/blog/" {
 		HttpErr(w, r, 404)
