@@ -62,6 +62,7 @@ func HttpIndex(w http.ResponseWriter, r *http.Request) {
 	}
 	d, err := GetPageData("index")
 	if CheckHttpErr(err, w, r, 500) {
+		AddRequiredData()
 		return
 	}
 	d.Set("Image", strings.TrimSuffix(config.URL, "/")+d["ImagePath"].(string))
