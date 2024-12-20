@@ -7,7 +7,7 @@ After=network.target
 WorkingDirectory=/home/httpuser/webhome
 
 # Set this to the binary you built
-ExecStart=/usr/local/bin/myweb
+ExecStart=/usr/local/bin/myweb myweb.conf
 
 # Set this to the user you want to run as (e.g. httpuser)
 User=httpuser
