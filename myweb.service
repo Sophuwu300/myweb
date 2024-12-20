@@ -1,0 +1,19 @@
+[Unit]
+Description=MyWeb Service
+After=network.target
+
+[Service]
+# Set this to where you copied the webhome directory
+WorkingDirectory=/home/httpuser/webhome
+
+# Set this to the binary you built
+ExecStart=/usr/local/bin/myweb
+
+# Set this to the user you want to run as (e.g. httpuser)
+User=httpuser
+
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

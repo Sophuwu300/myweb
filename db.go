@@ -47,6 +47,7 @@ func AddRequiredData() {
 			"Profiles": []Profile{
 				{"char in iconfont", "name of url", "URL", "username"},
 			},
+			"Content": "<p>HTML content</p>",
 		})
 	}
 	d, err = GetPageData("blogs")
