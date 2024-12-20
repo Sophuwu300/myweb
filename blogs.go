@@ -122,7 +122,7 @@ func BlogManageList(w http.ResponseWriter, r *http.Request) {
 	opts := make([]UrlOpt, len(blogs)+1)
 	opts[0] = UrlOpt{Name: "Add new blog", URL: "/manage/blog/?id=new"}
 	for i, b := range blogs {
-		opts[i+1] = UrlOpt{Name: b.Title, URL: "/manage/blog/?id=" + b.ID}
+		opts[i+1] = UrlOpt{Name: b.Title, URL: "/manage/blog/?id=" + url.PathEscape(b.ID)}
 	}
 	d := template.Data("Manage blogs", "List of blogs")
 	d.Set("Options", opts)
