@@ -66,6 +66,7 @@ It is built with Go and uses a bbolt + storm database for dynamic content.
 2. Install the systemd service:
    ```sh 
    sudo install ./myweb.service /etc/systemd/system/myweb.service
+   sudo systemctl daemon-reload
     ```
 
 3. Start the service:
