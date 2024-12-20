@@ -88,7 +88,7 @@ func GetBlogs() ([]BlogMeta, error) {
 
 // BlogHandler handles requests to the blog page and individual blog posts
 func BlogHandler(w http.ResponseWriter, r *http.Request) {
-	path := strings.TrimPrefix(r.URL.RawPath, "/blog/")
+	path := strings.TrimPrefix(r.URL.RawQuery, "blog=")
 	if path == "" {
 		blogs, err := GetBlogs()
 		if CheckHttpErr(err, w, r, 500) {

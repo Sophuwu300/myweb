@@ -14,7 +14,7 @@
     <hr>
     {{- range .blogs -}}
     <section class="blog-row">
-        <a href="/blog/{{- .ID -}}" class="ref-name">{{- .Title -}}</a>
+        <a href="/blog/?blog={{- .ID -}}" class="ref-name">{{- .Title -}}</a>
         <span class="date">{{- .Date -}}</span>
         <p >{{- .Desc -}}</p>
     </section>
