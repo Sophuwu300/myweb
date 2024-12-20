@@ -118,10 +118,7 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 
 // BlogManageList handles the /manage/blog/ route for listing all blog posts
 func BlogManageList(w http.ResponseWriter, r *http.Request) {
-	blogs, err := GetBlogs()
-	if CheckHttpErr(err, w, r, 500) {
-		return
-	}
+	blogs, _ := GetBlogs()
 	opts := make([]UrlOpt, len(blogs)+1)
 	opts[0] = UrlOpt{Name: "Add new blog", URL: "/manage/blog/?id=new"}
 	for i, b := range blogs {
@@ -129,7 +126,7 @@ func BlogManageList(w http.ResponseWriter, r *http.Request) {
 	}
 	d := template.Data("Manage blogs", "List of blogs")
 	d.Set("Options", opts)
-	err = template.Use(w, r, "manage", d)
+	err := template.Use(w, r, "manage", d)
 	CheckHttpErr(err, w, r, 500)
 	return
 }
