@@ -42,7 +42,7 @@ It is built with Go and uses a bbolt + storm database for dynamic content.
    # Copy files to http user directory. Use the actual user name for httpuser on your system.
    sudo cp -r ./webhome ~httpuser/
    # Change the owner of directory only, so the server can create new files.
-   sudo chown httpuser ~httpuser/myweb
+   sudo chown httpuser ~httpuser/webhome
     ```
 
 4. Build the application:
