@@ -3,3 +3,4 @@ webhome/*.db
 webhome/media
 webhome/*.log
 webhome/userpass
+.idea
