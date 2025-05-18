@@ -1,12 +1,12 @@
 package main
 
 import (
+	"git.sophuwu.com/myweb/template"
 	_ "github.com/asdine/storm/v3"
 	_ "go.etcd.io/bbolt"
 	"net/http"
 	"net/url"
 	"path/filepath"
-	"sophuwu.site/myweb/template"
 	"strings"
 	"time"
 )

@@ -7,8 +7,17 @@
     <h2>
         {{ .Title }} {{ .Description }}
     </h2>
+    {{ if .Form }}
+    <form style="width: 50%; margin: 0 auto;" method="POST">
+    <input style="width: 100%;" type="text" placeholder="username" autocomplete="off" name="username">
+    <input style="width: 100%;" type="password" autocomplete="off" name="password" placeholder="password">
+    <input style="width: 100%;" type="text" autocomplete="off" placeholder="otp" name="otp">
+    <input type="submit" value="submit">
+    </form>
+    {{ else }}
     {{ range .Options }}
     <a href="{{ .URL }}">{{ .Name }}</a><br>
+    {{ end }}
     {{ end }}
 </main>
 </body>

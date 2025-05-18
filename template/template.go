@@ -1,11 +1,12 @@
 package template
 
 import (
+	"bytes"
+	"git.sophuwu.com/myweb/config"
 	"html/template"
 	"net/http"
 	"os"
 	"path/filepath"
-	"sophuwu.site/myweb/config"
 )
 
 type HTMLDataMap map[string]any
@@ -34,6 +35,21 @@ func (d *HTMLDataMap) SetIfEmpty(key string, value any) {
 var templates *template.Template
 var fillFunc func(w http.ResponseWriter, name string, data HTMLDataMap) error
 var templatesDir string
+
+func FillString(name string, data HTMLDataMap) (string, error) {
+	data.SetIfEmpty("Url", config.URL)
+	data.SetIfEmpty("Email", config.Email)
+	data.SetIfEmpty("Name", config.Name)
+	if data["Content"] != nil {
+		data["HTML"] = template.HTML(data["Content"].(string))
+	}
+	var buf bytes.Buffer
+	err := templates.ExecuteTemplate(&buf, name, data)
+	if err != nil {
+		return "", err
+	}
+	return buf.String(), nil
+}
 
 func parseTemplates() error {
 	index := template.New("index")

@@ -18,14 +18,8 @@ button:hover {
 button:active {
     box-shadow: none;
 }
-textarea {
-    background-color: #111111;
-    border: 2px solid #aaaaaa;
-}
-input {
-    background-color: #111111;
-    border: 2px solid #aaaaaa;
-}
+textarea ,
+input ,
 button {
     background-color: rgba(0, 0, 0, 0.25);
     border: 3px solid transparent;

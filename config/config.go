@@ -2,50 +2,42 @@ package config
 
 import (
 	"bytes"
+
 	"log"
 	"os"
 	"path/filepath"
-	"time"
+	"strings"
 )
 
 var (
-	ListenAddr   string
-	WebRoot      string
-	StaticPath   string
-	MediaPath    string
-	Templates    string
-	DBPath       string
-	Email        string
-	Name         string
-	URL          string
-	passHash     str
-	passLoadTime time.Time
+	ListenAddr string
+	WebRoot    string
+	StaticPath string
+	MediaPath  string
+	Templates  string
+	DBPath     string
+	Email      string
+	Name       string
+	URL        string
+	passHash   Str
+	otp        string
 )
 
-type str string
+type Str string
 
-func (s str) Bytes() []byte {
+func (s Str) Bytes() []byte {
 	return []byte(s)
 }
-func (s str) String() string {
+func (s Str) String() string {
 	return string(s)
-
 }
 
-func PassHash() str {
-	if time.Since(passLoadTime) > 5*time.Minute {
-		passLoad()
-	}
+func OTP() string {
+	return otp
+}
+
+func PassHash() Str {
 	return passHash
-}
-
-func passLoad() {
-	b, err := os.ReadFile(path("userpass"))
-	if err != nil {
-		log.Fatalf("Error reading userpass: %v", err)
-	}
-	passHash = str(bytes.TrimSpace(b))
-	passLoadTime = time.Now()
 }
 
 func path(p string) string {
@@ -91,5 +83,22 @@ func init() {
 	Email = mm["email"]
 	Name = mm["name"]
 	URL = mm["url"]
-	passLoad()
+	b, err := os.ReadFile(path("userpass"))
+	if err != nil {
+		log.Fatalf("Error reading userpass: %v", err)
+	}
+	bb := strings.SplitN(string(bytes.TrimSpace(b)), "\n", 2)
+	if len(bb) != 2 {
+		log.Fatalf("Error reading userpass: %v", err)
+	}
+	otp = bb[1]
+	otp = strings.TrimSpace(otp)
+	if len(otp) == 0 {
+		log.Fatalf("Error reading userpass: %v", err)
+	}
+	passHash = Str(strings.TrimSpace(bb[0]))
+	if len(passHash) == 0 {
+		log.Fatalf("Error reading userpass: %v", err)
+	}
+
 }

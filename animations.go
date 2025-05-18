@@ -3,8 +3,8 @@ package main
 import (
 	"crypto/md5"
 	"encoding/base64"
+	"git.sophuwu.com/myweb/template"
 	"net/http"
-	"sophuwu.site/myweb/template"
 	"strings"
 	"time"
 )

@@ -4,14 +4,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"git.sophuwu.com/goauth/htsesh"
+	"git.sophuwu.com/myweb/config"
+	"git.sophuwu.com/myweb/template"
+	"github.com/pquerna/otp/totp"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/sys/unix"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
-	"sophuwu.site/myweb/config"
-	"sophuwu.site/myweb/template"
 	"strings"
 )
 
@@ -84,32 +86,43 @@ type Profile struct {
 // Passwords are hashed with bcrypt, stored in the userpass file in the
 // webhome directory. The file only contains one line, the bcrypt hash.
 // The hash is generated hashing the string "user:password" with bcrypt.
-func Authenticate(next http.HandlerFunc) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		user, apass, authOK := r.BasicAuth()
-		if !authOK || bcrypt.CompareHashAndPassword(config.PassHash().Bytes(), []byte(user+":"+apass)) != nil {
-			w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
-			http.Error(w, "Unauthorized.", http.StatusUnauthorized)
-			return
-		}
-		next.ServeHTTP(w, r)
-	})
-}
+
+// func Authenticate(next http.HandlerFunc) http.Handler {
+// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 		user, apass, authOK := r.BasicAuth()
+// 		if !authOK || bcrypt.CompareHashAndPassword(config.PassHash().Bytes(), []byte(user+":"+apass)) != nil {
+// 			w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
+// 			http.Error(w, "Unauthorized.", http.StatusUnauthorized)
+// 			return
+// 		}
+// 		next.ServeHTTP(w, r)
+// 	})
+// }
+
+var managerHandler = htsesh.Authenticate(ManagerHandler)
 
 // main is the entry point for the web server.
 func main() {
+	htsesh.SetVerifyFunc(func(username, password, otp string) bool {
+		return bcrypt.CompareHashAndPassword(config.PassHash().Bytes(), []byte(username+":"+password)) == nil && totp.Validate(otp, config.OTP())
+	})
+
 	OpenDB()
 	err := template.Init(config.Templates)
 	if err != nil {
 		log.Fatalf("Error initializing templates: %v", err)
 	}
 
+	d := template.Data("Management Login Only.", "Please leave this page.")
+	d.Set("Form", "Login")
+	htsesh.FORM, _ = template.FillString("manage", d)
+
 	http.HandleFunc("/", HttpIndex)
 	http.HandleFunc("/blog/", BlogHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(config.StaticPath))))
 	http.HandleFunc("/media/", MediaHandler)
 	http.HandleFunc("/animations/", AnimHandler)
-	http.Handle("/manage/", Authenticate(ManagerHandler))
+	http.Handle("/manage/", managerHandler)
 
 	server := http.Server{Addr: config.ListenAddr, Handler: nil}
 	go func() {

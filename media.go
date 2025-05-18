@@ -3,13 +3,13 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"git.sophuwu.com/myweb/template"
 	"go.etcd.io/bbolt"
 	"io"
 	"mime"
 	"net/http"
 	"os/exec"
 	"path/filepath"
-	"sophuwu.site/myweb/template"
 	"strings"
 )
 
